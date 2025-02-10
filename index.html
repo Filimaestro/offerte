@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketing Offerte</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; }
+        label, input, select, button { display: block; margin-top: 10px; width: 100%; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <h2>Marketing Offerte</h2>
+
+    <label>Naam van de klant:</label>
+    <input type="text" id="klantnaam">
+
+    <label>Datum van gesprek:</label>
+    <input type="date" id="datumGesprek">
+
+    <label>Uitzendperiode:</label>
+    <input type="date" id="startDatum">
+    <input type="date" id="eindDatum">
+
+    <label>Campagne:</label>
+    <input type="checkbox" id="online"> Online
+    <input type="checkbox" id="tv"> TV
+    <input type="checkbox" id="radio"> Radio
+
+    <div id="onlineFields" class="hidden">
+        <label>Aantal vertoningen online banners:</label>
+        <input type="number" id="vertoningen">
+        <label>Tarief (€ CPM):</label>
+        <input type="number" id="tarief">
+        <label>Korting (€):</label>
+        <input type="number" id="kortingOnline">
+    </div>
+
+    <div id="tvRadioFields" class="hidden">
+        <label>Lengte commercial (seconden):</label>
+        <input type="number" id="lengte">
+        <label>Secondetarief (€):</label>
+        <input type="number" id="secondetarief">
+        <label>Aantal commercials:</label>
+        <input type="number" id="aantal">
+        <label>Korting (€):</label>
+        <input type="number" id="kortingTvRadio">
+    </div>
+
+    <button onclick="berekenKosten()">Verzenden</button>
+
+    <h3>Offerte Overzicht:</h3>
+    <div id="resultaat"></div>
+
+    <script>
+        document.getElementById('online').addEventListener('change', function() {
+            document.getElementById('onlineFields').classList.toggle('hidden', !this.checked);
+        });
+
+        document.getElementById('tv').addEventListener('change', toggleTvRadio);
+        document.getElementById('radio').addEventListener('change', toggleTvRadio);
+
+        function toggleTvRadio() {
+            let tvChecked = document.getElementById('tv').checked;
+            let radioChecked = document.getElementById('radio').checked;
+            document.getElementById('tvRadioFields').classList.toggle('hidden', !(tvChecked || radioChecked));
+        }
+
+        function berekenKosten() {
+            let klantnaam = document.getElementById("klantnaam").value;
+            let datumGesprek = document.getElementById("datumGesprek").value;
+            let startDatum = document.getElementById("startDatum").value;
+            let eindDatum = document.getElementById("eindDatum").value;
+
+            let totaalKosten = 0;
+            let campagnes = [];
+
+            if (document.getElementById('online').checked) {
+                campagnes.push("Online");
+                let vertoningen = parseFloat(document.getElementById("vertoningen").value) || 0;
+                let tarief = parseFloat(document.getElementById("tarief").value) || 0;
+                let kortingOnline = parseFloat(document.getElementById("kortingOnline").value) || 0;
+                totaalKosten += (vertoningen * tarief) / 1000 - kortingOnline;
+            }
+
+            if (document.getElementById('tv').checked || document.getElementById('radio').checked) {
+                campagnes.push(document.getElementById('tv').checked ? "TV" : "Radio");
+                let secondetarief = parseFloat(document.getElementById("secondetarief").value) || 0;
+                let aantal = parseInt(document.getElementById("aantal").value) || 0;
+                let kortingTvRadio = parseFloat(document.getElementById("kortingTvRadio").value) || 0;
+                totaalKosten += (secondetarief * aantal) - kortingTvRadio;
+            }
+
+            document.getElementById("resultaat").innerHTML = `
+                <p><strong>Klant:</strong> ${klantnaam}</p>
+                <p><strong>Datum van gesprek:</strong> ${datumGesprek}</p>
+                <p><strong>Uitzendperiode:</strong> ${startDatum} - ${eindDatum}</p>
+                <p><strong>Campagnes:</strong> ${campagnes.join(", ")}</p>
+                <p><strong>Totaal Netto Campagnekosten:</strong> €${totaalKosten.toFixed(2)}</p>
+            `;
+        }
+    </script>
+
+</body>
+</html>

@@ -18,7 +18,7 @@
     <input type="text" id="klantnaam">
 
     <label>Datum van gesprek:</label>
-    <input type="date" id="datumGesprek">
+    <input type="date" id="datumGesprek" value="">
 
     <label>Uitzendperiode:</label>
     <input type="date" id="startDatum">
@@ -80,11 +80,16 @@
             document.getElementById('radioFields').classList.toggle('hidden', !this.checked);
         });
 
+        document.addEventListener("DOMContentLoaded", function() {
+            let today = new Date().toISOString().split("T")[0];
+            document.getElementById("datumGesprek").value = today;
+        });
+
         function berekenKosten() {
             let klantnaam = document.getElementById("klantnaam").value;
-            let datumGesprek = document.getElementById("datumGesprek").value;
-            let startDatum = document.getElementById("startDatum").value;
-            let eindDatum = document.getElementById("eindDatum").value;
+            let datumGesprek = new Date(document.getElementById("datumGesprek").value).toLocaleDateString("nl-NL")
+            let startDatum = new Date(document.getElementById("startDatum").value).toLocaleDateString("nl-NL")
+            let eindDatum = new Date(document.getElementById("eindDatum").value).toLocaleDateString("nl-NL")
 
             let totaalKosten = 0;
             let campagnes = [];

@@ -88,6 +88,7 @@
             if (document.getElementById('tv').checked || document.getElementById('radio').checked) {
                 campagnes.push(document.getElementById('tv').checked ? "TV" : "Radio");
                 let secondetarief = parseFloat(document.getElementById("secondetarief").value) || 0;
+let lengte = parseFloat(document.getElementById("lengte").value) || 0;
                 let aantal = parseInt(document.getElementById("aantal").value) || 0;
                 let kortingTvRadio = parseFloat(document.getElementById("kortingTvRadio").value) || 0;
                 totaalKosten += (secondetarief * aantal * lengte) - kortingTvRadio;
